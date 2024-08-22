@@ -1,0 +1,7 @@
+# Ignore venv
+.venv
+
+# json files (big data files)
+*.json
+# zip files
+*.zip
