@@ -1,6 +1,8 @@
 # Ignore venv
 .venv
 
+*copy*
+
 # json files (big data files)
 *.json
 # zip files
