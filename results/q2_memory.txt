@@ -1,0 +1,62 @@
+mprof: Sampling memory every 0.1s
+running new process
+running as a Python program...
+Filename: ./src/q2_memory.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+     9  48.4258 MiB  48.4258 MiB           1   @profile(precision=4)
+    10                                         def extract_emojis_pattern():
+    11                                             # Regular expression pattern for emojis
+    12  48.6719 MiB   0.2461 MiB           2       return re.compile(
+    13  48.4258 MiB   0.0000 MiB           1           "["
+    14                                                 "\U0001F600-\U0001F64F"  # emoticons
+    15                                                 "\U0001F300-\U0001F5FF"  # symbols & pictographs
+    16                                                 "\U0001F680-\U0001F6FF"  # transport & map symbols
+    17                                                 "\U0001F1E0-\U0001F1FF"  # flags (iOS)
+    18                                                 "\U00002702-\U000027B0"  # dingbats
+    19                                                 "\U000024C2-\U0001F251" 
+    20  48.4258 MiB   0.0000 MiB           1           "]+", flags=re.UNICODE
+    21                                             )
+
+
+Filename: ./src/q2_memory.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+    23  48.4258 MiB  48.4258 MiB           1   @profile(precision=4)
+    24                                         def count_emojis(file_path: str) -> Dict[str, int]:
+    25  48.4258 MiB   0.0000 MiB           1       emojis_cnt = {}
+    26  48.6719 MiB   0.2461 MiB           1       emojis_pattern = extract_emojis_pattern()
+    27  48.9258 MiB   0.0000 MiB           2       with open(file_path, 'r') as file:
+    28  48.9258 MiB   0.0000 MiB      117408           for line in file:  
+    29  48.9258 MiB   0.2539 MiB      138865               for em in emojis_pattern.findall(json.loads(line).get('content')):
+    30  48.9258 MiB   0.0000 MiB       69835                   for e in em.strip().rstrip('\uFE0F'):
+    31  48.9258 MiB   0.0000 MiB       48377                       if emojis_cnt.get(e):
+    32  48.9258 MiB   0.0000 MiB       47468                           emojis_cnt[e] += 1
+    33                                                             else:
+    34  48.9258 MiB   0.0000 MiB         909                           emojis_cnt[e] = 1
+    35  48.9258 MiB   0.0000 MiB           1       del emojis_pattern
+    36  48.9258 MiB   0.0000 MiB           1       return emojis_cnt
+
+
+Filename: ./src/q2_memory.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+    38  48.9258 MiB  48.9258 MiB           1   @profile(precision=4)
+    39                                         def top_emojis(emojis: Dict[str, int]) -> List[Tuple[str, int]]:
+    40  48.9258 MiB   0.0000 MiB        1819       return heapq.nlargest(10, emojis.items(), key=lambda x: x[1])
+
+
+Filename: ./src/q2_memory.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+    42  48.4258 MiB  48.4258 MiB           1   @profile(precision=4)
+    43                                         def q2_memory(file_path: str) -> List[Tuple[str, int]]:
+    44  48.9258 MiB   0.5000 MiB           1       emojis = count_emojis(file_path)
+    45                                             
+    46  48.9258 MiB   0.0000 MiB           1       top = top_emojis(emojis)
+    47                                             
+    48  48.9258 MiB   0.0000 MiB           1       return top
