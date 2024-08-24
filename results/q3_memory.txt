@@ -1,0 +1,66 @@
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+     9  48.3203125000 MiB  48.3203125000 MiB           1   @profile(precision=10)
+    10                                         def user_mentions(file_path: str) -> Dict[str, int]:
+    11                                             """Contar la cantidad de menciones que tiene cada usuario
+    12                                         
+    13                                             Args:
+    14                                                 file_path (str): ubicación del archivo con los tweets
+    15                                         
+    16                                             Returns:
+    17                                                 Dict[str, int]: Contador de número de menciones por usuario
+    18                                             """
+    19  48.3203125000 MiB   0.0000000000 MiB           1       users = {}
+    20  50.1171875000 MiB   0.0000000000 MiB           2       with open(file_path, 'r') as file:
+    21  50.1171875000 MiB   0.2578125000 MiB      117408           for line in file:
+    22  50.1171875000 MiB   0.7656250000 MiB      559027               for username in [mention['username'] for mention in (json.loads(line).get('mentionedUsers') or [])]:
+    23  50.1171875000 MiB   0.0000000000 MiB      103403                   if users.get(username):
+    24  50.1171875000 MiB   0.0000000000 MiB       88164                       users[username] += 1
+    25                                                         else:
+    26  50.1171875000 MiB   0.7734375000 MiB       15239                       users[username] = 1
+    27  50.1171875000 MiB   0.0000000000 MiB           1       return users
+
+
+Filename: /home/jtvigneaux/git/latam-data-engineer/src/q3_memory.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+    29  50.1171875000 MiB  50.1171875000 MiB           1   @profile(precision=10)
+    30                                         def top_users(users: Dict[str, int]) -> List[Tuple[str, int]]:
+    31                                             """Obtener los 10 usuarios más populares, es decir, los que más menciones tienen.
+    32                                         
+    33                                             Args:
+    34                                                 users (Dict[str, int]): Contador de todos los usuarios con sus respectivas cantidades de menciones para
+    35                                         
+    36                                             Returns:
+    37                                                 List[Tuple[str, int]]: Top 10 de usuarios mencionados
+    38                                             """
+    39  50.1171875000 MiB   0.0000000000 MiB           1       min_heap = []
+    40  50.1171875000 MiB   0.0000000000 MiB       15240       for user, count in users.items():
+    41  50.1171875000 MiB   0.0000000000 MiB       15239           if len(min_heap) < 10:
+    42  50.1171875000 MiB   0.0000000000 MiB          10               heapq.heappush(min_heap, (count, user))
+    43                                                 else:
+    44  50.1171875000 MiB   0.0000000000 MiB       15229               heapq.heappushpop(min_heap, (count, user))
+    45  50.1171875000 MiB   0.0000000000 MiB          13       return [(user, count) for count, user in heapq.nlargest(10, min_heap)]
+
+
+Filename: /home/jtvigneaux/git/latam-data-engineer/src/q3_memory.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+    47  48.3203125000 MiB  48.3203125000 MiB           1   @profile(precision=10)
+    48                                         def q3_memory(file_path: str) -> List[Tuple[str, int]]:
+    49                                             """Dado un archivo de tweets, obtener los 10 usuarios con más menciones entre todos los tweets 
+    50                                         
+    51                                             Args:
+    52                                                 file_path (str): Ubicación del archivo de tweets
+    53                                         
+    54                                             Returns:
+    55                                                 List[Tuple[str, int]]: Top 10 de usuarios con más menciones.
+    56                                             """
+    57  50.1171875000 MiB   1.7968750000 MiB           1       mentions = user_mentions(file_path)
+    58                                             
+    59  50.1171875000 MiB   0.0000000000 MiB           1       top = top_users(mentions)
+    60                                             
+    61  50.1171875000 MiB   0.0000000000 MiB           1       del mentions
+    62  50.1171875000 MiB   0.0000000000 MiB           1       return top
