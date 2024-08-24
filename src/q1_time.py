@@ -6,6 +6,14 @@ from collections import defaultdict
 import heapq
 
 def group_by_date(file_path: str) -> Tuple[defaultdict, Dict[datetime.date, str]]:
+    """Agrupar la cantidad de tweets por día
+
+    Args:
+        file_path (str): Ubicación del archivo con los tweets
+
+    Returns:
+        Tuple[defaultdict, Dict[datetime.date, str]]: Diccionario con el conteo por dia, Usuario más popular por día
+    """
     dates = defaultdict(int)
     user_by_date = defaultdict(lambda: defaultdict(int))
     dates_max_usr = {}
@@ -24,6 +32,14 @@ def group_by_date(file_path: str) -> Tuple[defaultdict, Dict[datetime.date, str]
     return dates, dates_max_usr
 
 def popular_dates(dates: defaultdict) -> List[Tuple[int, datetime.date]]:
+    """Obtener las 10 fechas más populares
+
+    Args:
+        dates (defaultdict): Diccionario con las fechas y la cantidad de tweets
+
+    Returns:
+        List[Tuple[int, datetime.date]]: Cantidad de tweets, dia
+    """
     # Crear el min-heap con las fechas más populares
     min_heap = []
     for date, count in dates.items():
@@ -35,6 +51,14 @@ def popular_dates(dates: defaultdict) -> List[Tuple[int, datetime.date]]:
     return min_heap
 
 def q1_time(file_path: str) -> List[Tuple[datetime.date, str]]:
+    """Obtener las fechas más populares y los usuarios con más posts en ellas
+
+    Args:
+        file_path (str): Ubicación del archivo con los tweets
+
+    Returns:
+        List[Tuple[datetime.date, str]]: Top 10 fechas más populares acompañado del usuario con más tweets el día correspondiente.
+    """
     # agrupar por fecha (O(m))
     dates, dates_max_usr = group_by_date(file_path)
     
