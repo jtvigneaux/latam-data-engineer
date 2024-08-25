@@ -1,9 +1,10 @@
 from typing import List, Tuple, Dict
 from datetime import datetime
 
-import json
+import orjson as json
 from collections import defaultdict
 import heapq
+
 
 def group_by_date(file_path: str) -> Tuple[defaultdict, Dict[datetime.date, str]]:
     """Agrupar la cantidad de tweets por día
