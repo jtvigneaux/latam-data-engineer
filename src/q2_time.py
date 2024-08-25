@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-import json
+import orjson as json
 import re
 from collections import Counter
 
