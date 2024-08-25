@@ -1,9 +1,10 @@
 from typing import List, Tuple, Dict
 from datetime import datetime
 
-import json
+import orjson as json
 from collections import defaultdict
 import heapq
+
 
 def group_by_date(file_path: str) -> Tuple[defaultdict, Dict[datetime.date, str]]:
     """Agrupar la cantidad de tweets por día
@@ -15,7 +16,7 @@ def group_by_date(file_path: str) -> Tuple[defaultdict, Dict[datetime.date, str]
         Tuple[defaultdict, Dict[datetime.date, str]]: Diccionario con el conteo por dia, Usuario más popular por día
     """
     dates = defaultdict(int)
-    user_by_date = defaultdict(lambda: defaultdict(int))
+    user_by_date = defaultdict(int)
     dates_max_usr = {}
     with open(file_path, 'r') as file:
         # Revisar cada fila de tweets (un total de m)
@@ -25,9 +26,10 @@ def group_by_date(file_path: str) -> Tuple[defaultdict, Dict[datetime.date, str]
             # Conteo de tweeets por dia
             dates[date] += 1
             # Llevar el registro de el usuario con mas tweets para cada dia
-            user_by_date[date][tweet.get('user').get('username')] += 1
-            if dates_max_usr.get(date, (None, 0))[1] < user_by_date[date][tweet.get('user').get('username')]:
-                dates_max_usr[date] = (tweet.get('user').get('username'), user_by_date[date][tweet.get('user').get('username')])
+            username = tweet.get('user').get('username')
+            user_by_date[(date, username)] += 1
+            if dates_max_usr.get(date, (None, 0))[1] < user_by_date[(date, username)]:
+                dates_max_usr[date] = (username, user_by_date[(date, username)])
     
     return dates, dates_max_usr
 
