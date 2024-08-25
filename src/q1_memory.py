@@ -1,13 +1,12 @@
 from typing import List, Tuple, Dict
 
-import json
-from collections import defaultdict
+import orjson as json
 from datetime import datetime
 import heapq
 
 from memory_profiler import profile
 
-# @profile(precision=4)
+@profile(precision=10)
 def group_by_date(file_path: str) -> Dict[str, Dict[str, int]]:
     """Revisar todos los tweets para agruparlos por fecha
 
@@ -39,7 +38,7 @@ def group_by_date(file_path: str) -> Dict[str, Dict[str, int]]:
                     
     return user_by_date
 
-# @profile(precision=4)
+@profile(precision=10)
 def popular_dates(dates: Dict[str, int]) -> List[str]:
     """Calcular las 10 fechas con mas tweet
 
@@ -49,10 +48,10 @@ def popular_dates(dates: Dict[str, int]) -> List[str]:
     Returns:
         List[str]: Top 10 fechas de mayor a menor
     """
-    # Hay que sumar la cantidad de tweeets totales entre todos los uusarios de una fecha
+    # Hay que sumar la cantidad de tweeets totales entre todos los usarios de una fecha
     return [date for date, _ in heapq.nlargest(10, dates.items(), key=lambda x: sum(x[1].values()))]
  
-# @profile(precision=4)
+@profile(precision=10)
 def popular_users(user_by_date: Dict[str, int], min_heap: List[Tuple[str, int]]) -> List[str]:
     """Calculate the most popular user for each of the top 10 dates.
 
@@ -65,7 +64,7 @@ def popular_users(user_by_date: Dict[str, int], min_heap: List[Tuple[str, int]])
     """
     return [max(user_by_date[date].items(), key=lambda x: x[1])[0] for date in min_heap]            
 
-# @profile(precision=4)
+@profile(precision=10)
 def q1_memory(file_path: str) -> List[Tuple[str, int]]:
     """Find the 10 dates with the most tweets and the user with the most tweets for each of those dates, all while optimizing memory usage.
 
